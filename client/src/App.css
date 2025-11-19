@@ -1,0 +1,50 @@
+#root {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.App {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row; /* サイドバーを左に配置 */
+  background-color: #000;
+  overflow: hidden; /* スクロールバーを完全に非表示 */
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column-reverse; /* ツールバーを下に配置 */
+  overflow: hidden;
+  min-width: 0; /* フレックスアイテムのオーバーフローを防ぐ */
+  position: relative; /* 位置の基準点を設定 */
+}
+
+.canvas-container {
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  /* 木の縁 */
+  border: 15px solid #8B7355;
+  border-top-width: 20px;
+  border-bottom-width: 15px;
+  box-shadow: 
+    inset 0 0 0 3px #6B5345,
+    inset 0 0 0 5px #A0826D,
+    0 4px 8px rgba(0, 0, 0, 0.3);
+  background: #8B7355;
+}
+
+.canvas-container canvas {
+  border-radius: 0;
+}
+
+/* スクロールバーを非表示にする（Webkit系ブラウザ用） */
+*::-webkit-scrollbar {
+  display: none;
+}

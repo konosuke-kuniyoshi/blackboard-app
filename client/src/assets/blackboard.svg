@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 黒板の枠 -->
+  <rect x="5" y="10" width="90" height="70" rx="2" fill="#8B7355" stroke="#6B5345" stroke-width="2"/>
+  
+  <!-- 黒板の本体 -->
+  <rect x="10" y="15" width="80" height="60" fill="#2d5016" stroke="#1a3010" stroke-width="1"/>
+  
+  <!-- チョークで描いた文字（簡単な線） -->
+  <path d="M 20 30 Q 30 25, 40 30" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 45 30 L 55 30" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 60 25 L 70 35" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 70 25 L 60 35" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round"/>
+  
+  <!-- 数式っぽい装飾 -->
+  <circle cx="25" cy="50" r="8" stroke="#ffff00" stroke-width="2" fill="none"/>
+  <path d="M 40 45 L 50 55 M 40 55 L 50 45" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round"/>
+  <path d="M 60 50 L 75 50 M 67.5 43 L 67.5 57" stroke="#4ecdc4" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- チョーク置き場 -->
+  <rect x="10" y="78" width="80" height="7" fill="#d4a574" stroke="#b48860" stroke-width="1"/>
+  
+  <!-- チョーク -->
+  <rect x="20" y="80" width="12" height="3" rx="1" fill="#ffffff"/>
+  <rect x="35" y="80" width="12" height="3" rx="1" fill="#ffff00"/>
+  <rect x="50" y="80" width="12" height="3" rx="1" fill="#ff6b6b"/>
+</svg>
