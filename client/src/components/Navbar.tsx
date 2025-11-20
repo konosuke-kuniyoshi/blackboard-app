@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import blackboardIcon from '../assets/blackboard.svg';
 import { AdSense } from './AdSense';
+import './Navbar.css';
 
 interface NavbarProps {
   currentRoom: string;
@@ -22,10 +23,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange }) => 
   ];
 
   return (
-    <nav style={{
-      ...styles.sidebar,
-      width: isCollapsed ? '60px' : '200px'
-    }}>
+    <nav 
+      className={`navbar ${isCollapsed ? 'collapsed' : 'expanded'}`}
+      style={{ width: isCollapsed ? '60px' : '200px' }}
+    >
       {/* ヘッダー */}
       <div style={styles.header}>
         {!isCollapsed && (

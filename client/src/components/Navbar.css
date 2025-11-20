@@ -1,0 +1,41 @@
+/* デスクトップ版のナビゲーションバー */
+.navbar {
+  height: 100%;
+  background-color: #1a1a1a;
+  color: #fff;
+  border-right: 2px solid #333;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* タブレット対応: 画面幅が768px以下 */
+@media (max-width: 768px) {
+  .navbar {
+    width: 50px !important; /* 常に折りたたみ状態 */
+  }
+  
+  /* 折りたたみ時は最小幅に */
+  .navbar.collapsed {
+    width: 50px !important;
+  }
+  
+  /* 展開時も控えめに */
+  .navbar.expanded {
+    width: 150px !important;
+  }
+}
+
+/* スマホ対応: 画面幅が480px以下 */
+@media (max-width: 480px) {
+  .navbar {
+    width: 45px !important;
+  }
+  
+  .navbar.expanded {
+    width: 120px !important;
+  }
+}
