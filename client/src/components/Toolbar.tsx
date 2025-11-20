@@ -1,4 +1,5 @@
 import React from 'react';
+import './Toolbar.css';
 
 interface ToolbarProps {
   color: string;
@@ -139,7 +140,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   ];
 
   return (
-    <div style={styles.toolbar}>
+    <div className="toolbar">
       {/* 接続状態 */}
       <div style={styles.section}>
         <span style={styles.label}>接続: </span>
@@ -230,19 +231,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
 // スタイル定義
 const styles: { [key: string]: React.CSSProperties } = {
-  toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '15px',
-    padding: '8px 20px',
-    backgroundColor: '#d4a574', // 木製の棚のような色
-    color: '#000',
-    borderTop: '3px solid #8B7355',
-    borderBottom: '2px solid #6B5345',
-    boxShadow: '0 -2px 10px rgba(0,0,0,0.3)',
-    flexWrap: 'wrap',
-    minHeight: '60px'
-  },
   section: {
     display: 'flex',
     alignItems: 'center',
