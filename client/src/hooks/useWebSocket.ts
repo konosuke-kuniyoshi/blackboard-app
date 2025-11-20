@@ -15,7 +15,6 @@ export const useWebSocket = (roomId: string) => {
     // WebSocket接続を確立
     const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
     console.log('Connecting to WebSocket server:', wsUrl);
-    console.log('🏠 Room ID:', roomId);
     ws.current = new WebSocket(wsUrl);
 
     // 接続が開いた時
