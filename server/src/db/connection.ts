@@ -5,11 +5,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // PostgreSQLデータベースへの接続プールを作成
-export const pool =new Pool({
+export const pool = new Pool({
     connectionString: process.env.DATABASE_URL,     // 接続文字列
     max: 20,                                        // 最大20個の接続を保持
     idleTimeoutMillis: 30000,                       // 30秒使わない接続は閉じる
-    connectionTimeoutMillis: 2000,                  // 接続タイムアウト2秒
+    connectionTimeoutMillis: 10000,                 // 接続タイムアウト10秒
 })
 
 // SQLを実行する関数
