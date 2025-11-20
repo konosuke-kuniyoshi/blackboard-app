@@ -13,8 +13,9 @@ export const useWebSocket = (roomId: string) => {
 
   useEffect(() => {
     // WebSocket接続を確立
-    console.log('Connecting to WebSocket server...');
-    ws.current = new WebSocket('ws://localhost:3001');
+    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
+    console.log('Connecting to WebSocket server:', wsUrl);
+    ws.current = new WebSocket(wsUrl);
 
     // 接続が開いた時
     ws.current.onopen = () => {

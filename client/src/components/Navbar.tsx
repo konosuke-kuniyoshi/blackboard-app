@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import blackboardIcon from '../assets/blackboard.svg';
+import { AdSense } from './AdSense';
 
 interface NavbarProps {
   currentRoom: string;
@@ -64,6 +65,17 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange }) => 
           </button>
         ))}
       </div>
+
+      {/* 広告エリア（展開時のみ表示） */}
+      {!isCollapsed && (
+        <div style={styles.adContainer}>
+          <AdSense 
+            adSlot="XXXXXXXXXX"
+            adFormat="auto"
+            style={{ minHeight: '100px' }}
+          />
+        </div>
+      )}
 
       {/* 現在の部屋情報 */}
       <div style={{
@@ -179,6 +191,13 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   roomName: {
     flex: 1
+  },
+  adContainer: {
+    padding: '10px',
+    borderTop: '1px solid #333',
+    backgroundColor: '#0a0a0a',
+    minHeight: '100px',
+    flexShrink: 0
   },
   footer: {
     padding: '15px',
