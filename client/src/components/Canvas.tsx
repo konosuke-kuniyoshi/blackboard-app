@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import type { DrawingStroke, Point } from '../types/drawing';
 
 interface CanvasProps {
@@ -25,6 +25,25 @@ export const Canvas: React.FC<CanvasProps> = ({
   const [isDrawing, setIsDrawing] = useState(false);
   const [currentPoints, setCurrentPoints] = useState<Point[]>([]);
 
+  /**
+   * ストロークを描画
+   */
+  const drawStroke = useCallback((ctx: CanvasRenderingContext2D, stroke: DrawingStroke) => {
+    if (stroke.points.length < 2) return;
+
+    ctx.beginPath();
+    ctx.strokeStyle = stroke.tool === 'eraser' ? '#2d5016' : stroke.color;
+    ctx.lineWidth = stroke.lineWidth;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+    for (let i = 1; i < stroke.points.length; i++) {
+      ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
+    }
+    ctx.stroke();
+  }, []);
+
   // Canvasのサイズを画面に合わせる
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -33,15 +52,33 @@ export const Canvas: React.FC<CanvasProps> = ({
     const resizeCanvas = () => {
       const parent = canvas.parentElement;
       if (parent) {
+        const oldWidth = canvas.width;
+        const oldHeight = canvas.height;
+        
         canvas.width = parent.clientWidth;
         canvas.height = parent.clientHeight;
+        
+        // サイズが変更された場合は再描画をトリガー
+        if (oldWidth !== canvas.width || oldHeight !== canvas.height) {
+          // 背景色を塗りつぶし
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.fillStyle = '#2d5016';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 全ストロークを再描画
+            strokes.forEach((stroke) => {
+              drawStroke(ctx, stroke);
+            });
+          }
+        }
       }
     };
 
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
     return () => window.removeEventListener('resize', resizeCanvas);
-  }, []);
+  }, [strokes]); // strokesを依存配列に追加
 
   // ストロークが更新されたら再描画
   useEffect(() => {
@@ -59,26 +96,7 @@ export const Canvas: React.FC<CanvasProps> = ({
     strokes.forEach((stroke) => {
       drawStroke(ctx, stroke);
     });
-  }, [strokes]);
-
-  /**
-   * ストロークを描画
-   */
-  const drawStroke = (ctx: CanvasRenderingContext2D, stroke: DrawingStroke) => {
-    if (stroke.points.length < 2) return;
-
-    ctx.beginPath();
-    ctx.strokeStyle = stroke.tool === 'eraser' ? '#2d5016' : stroke.color;
-    ctx.lineWidth = stroke.lineWidth;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
-    ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
-    for (let i = 1; i < stroke.points.length; i++) {
-      ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
-    }
-    ctx.stroke();
-  };
+  }, [strokes, drawStroke]);
 
   /**
    * マウス座標を取得

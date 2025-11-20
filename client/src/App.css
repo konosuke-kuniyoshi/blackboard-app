@@ -42,6 +42,9 @@
 
 .canvas-container canvas {
   border-radius: 0;
+  touch-action: none; /* Canvas上でピンチズームを無効化 */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* スクロールバーを非表示にする（Webkit系ブラウザ用） */

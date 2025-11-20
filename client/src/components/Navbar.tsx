@@ -18,7 +18,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange }) => 
     { id: 'room-1', name: '教室1', icon: '🏫' },
     { id: 'room-2', name: '教室2', icon: '📚' },
     { id: 'room-3', name: '教室3', icon: '✏️' },
-    { id: 'meeting', name: '会議室', icon: '💼' },
     { id: 'study', name: '自習室', icon: '📖' }
   ];
 
@@ -72,7 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange }) => 
           <AdSense 
             adSlot="XXXXXXXXXX"
             adFormat="auto"
-            style={{ minHeight: '100px' }}
+            style={{ minHeight: '60px', maxHeight: '100px' }}
           />
         </div>
       )}
@@ -196,8 +195,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     padding: '10px',
     borderTop: '1px solid #333',
     backgroundColor: '#0a0a0a',
-    minHeight: '100px',
-    flexShrink: 0
+    minHeight: '80px',
+    maxHeight: '120px',
+    flexShrink: 0,
+    overflow: 'hidden'
   },
   footer: {
     padding: '15px',
