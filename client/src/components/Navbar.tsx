@@ -29,7 +29,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange, isCol
       style={{ width: isCollapsed ? '60px' : '200px' }}
     >
       {/* ヘッダー */}
-      <div style={styles.header}>
+      <div style={{
+        ...styles.header,
+        justifyContent: isCollapsed ? 'center' : 'space-between' // 折り畳み時は中央、展開時は両端
+      }}>
         {!isCollapsed && (
           <div style={styles.logo}>
             <img src={blackboardIcon} alt="黒板" style={styles.logoIcon} />
@@ -122,7 +125,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderBottom: '2px solid #333',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center', // 折り畳み時に中央配置
     gap: '10px',
     minHeight: '60px'
   },
