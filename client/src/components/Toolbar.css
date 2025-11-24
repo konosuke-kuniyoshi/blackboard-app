@@ -19,16 +19,17 @@
     height: 300px !important; /* 固定高さ */
     max-height: 300px !important; /* 最大高さを制限 */
     overflow-y: auto !important; /* 縦スクロールを有効 */
-    overflow-x: hidden; /* 横スクロールは無効 */
+    overflow-x: auto !important; /* 横スクロールを有効 */
     padding: 15px 10px;
     gap: 10px;
     flex-shrink: 0 !important;
     -webkit-overflow-scrolling: touch; /* iOSのスムーズスクロール */
   }
   
-  /* ツールバーのスクロールバーのカスタムスタイル */
+  /* ツールバーのスクロールバーのカスタムスタイル（縦） */
   .toolbar::-webkit-scrollbar {
     width: 6px;
+    height: 6px; /* 横スクロールバーの高さ */
   }
   
   .toolbar::-webkit-scrollbar-track {
@@ -47,7 +48,7 @@
     height: 300px !important; /* 固定高さ */
     max-height: 300px !important;
     overflow-y: auto !important;
-    overflow-x: hidden;
+    overflow-x: auto !important; /* 横スクロールを有効 */
     padding: 12px 8px;
     gap: 8px;
     flex-shrink: 0 !important;
