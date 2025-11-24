@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import './Toolbar.css';
 
 interface ToolbarProps {
@@ -291,7 +292,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
               >
                 <ChalkIcon color={c} isActive={color === c} />
               </button>
-              {editingColor === c && c !== '#ffffff' && (
+              {editingColor === c && c !== '#ffffff' && createPortal(
                 <div 
                   className="color-edit-dialog"
                   style={{
@@ -420,7 +421,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   >
                     閉じる
                   </button>
-                </div>
+                </div>,
+                document.body
               )}
             </div>
           ))}
@@ -460,7 +462,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             >
               +
             </button>
-            {showColorPicker && (
+            {showColorPicker && createPortal(
               <div 
                 className="color-picker-dialog"
                 style={{
@@ -570,7 +572,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                 >
                   閉じる
                 </button>
-              </div>
+              </div>,
+              document.body
             )}
           </div>
         </div>
