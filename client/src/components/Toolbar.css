@@ -11,6 +11,8 @@
   flex-wrap: wrap;
   min-height: 60px;
   flex-shrink: 0; /* ツールバーが縮小されないようにする */
+  position: relative; /* z-indexを有効にする */
+  z-index: 100; /* キャンバスより上、ダイアログより下 */
 }
 
 /* スマホ対応: 画面幅が768px以下の場合 */

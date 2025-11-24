@@ -412,6 +412,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                 fontSize: '20px',
                 display: 'flex',
                 alignItems: 'center',
+                alignContent: 'center',
                 justifyContent: 'center',
                 fontWeight: 'bold',
                 color: '#000000',

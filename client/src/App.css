@@ -32,6 +32,7 @@ html, body {
   min-width: 0; /* フレックスアイテムのオーバーフローを防ぐ */
   position: relative; /* 位置の基準点を設定 */
   height: 100vh; /* ビューポート全体の高さを確保 */
+  z-index: 1; /* ダイアログより下に配置 */
 }
 
 .canvas-container {
@@ -39,6 +40,7 @@ html, body {
   width: 100%;
   overflow: hidden; /* デスクトップではスクロールなし */
   position: relative;
+  z-index: 1; /* ダイアログより下に配置 */
   /* 木の縁 */
   border: 15px solid #8B7355;
   border-top-width: 20px;
