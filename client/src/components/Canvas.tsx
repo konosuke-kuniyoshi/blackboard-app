@@ -196,6 +196,7 @@ export const Canvas: React.FC<CanvasProps> = ({
     if (e.touches.length === 1) {
       // ブラウザのスクロールを確実に防止
       e.preventDefault();
+      e.stopPropagation(); // イベントの伝播を停止
       setIsDrawing(true);
       const point = getTouchPos(e);
       setCurrentPoints([point]);
@@ -213,6 +214,7 @@ export const Canvas: React.FC<CanvasProps> = ({
     if (e.touches.length === 1) {
       // ブラウザのスクロールを確実に防止
       e.preventDefault();
+      e.stopPropagation(); // イベントの伝播を停止
     
       const point = getTouchPos(e);
       const newPoints = [...currentPoints, point];
@@ -246,6 +248,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   const stopTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
     if (isDrawing) {
       e.preventDefault();
+      e.stopPropagation(); // イベントの伝播を停止
       stopDrawing();
     }
   };
