@@ -98,6 +98,7 @@
     left: 0 !important;
     width: 45px !important; /* ナビバーの幅に合わせる */
     z-index: 500 !important; /* フッターより下、部屋リストより上 */
+    transition: width 0.3s ease !important; /* 幅のアニメーションを追加 */
   }
   
   .navbar.expanded .navbar-ad-container {
