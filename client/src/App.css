@@ -28,7 +28,7 @@
 .canvas-container {
   flex: 1;
   width: 100%;
-  overflow: hidden;
+  overflow: hidden; /* デスクトップではスクロールなし */
   position: relative;
   /* 木の縁 */
   border: 15px solid #8B7355;
@@ -46,6 +46,29 @@
   touch-action: none; /* Canvas上でピンチズームを無効化 */
   -webkit-user-select: none;
   user-select: none;
+}
+
+/* スマートフォン対応: 黒板をスクロール可能に */
+@media (max-width: 768px) {
+  .canvas-container {
+    overflow: auto !important; /* スクロール許可 */
+    -webkit-overflow-scrolling: touch; /* iOSのスムーズスクロール */
+  }
+  
+  .canvas-container canvas {
+    min-height: 100vh; /* 最低でもビューポート全体の高さ */
+  }
+}
+
+/* 縦画面のスマートフォン: さらに調整 */
+@media (max-width: 480px) and (orientation: portrait) {
+  .canvas-container {
+    overflow: auto !important;
+  }
+  
+  .canvas-container canvas {
+    min-height: 150vh; /* 縦画面では高さを1.5倍に */
+  }
 }
 
 /* スクロールバーを非表示にする（Webkit系ブラウザ用） */
