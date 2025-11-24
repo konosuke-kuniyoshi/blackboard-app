@@ -57,8 +57,18 @@ export const Canvas: React.FC<CanvasProps> = ({
         
         // CSSで設定されたサイズを取得
         const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width;
-        canvas.height = rect.height;
+        
+        // スマホ判定：画面幅が768px以下の場合は固定サイズ
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+          // スマホでは固定サイズを使用
+          canvas.width = 1200;
+          canvas.height = 800;
+        } else {
+          // デスクトップではrectのサイズを使用
+          canvas.width = rect.width;
+          canvas.height = rect.height;
+        }
         
         // サイズが変更された場合は再描画をトリガー
         if (oldWidth !== canvas.width || oldHeight !== canvas.height) {
@@ -89,6 +99,19 @@ export const Canvas: React.FC<CanvasProps> = ({
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    // canvasのサイズが0の場合は設定する（初期化時）
+    if (canvas.width === 0 || canvas.height === 0) {
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        canvas.width = 1200;
+        canvas.height = 800;
+      } else {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+      }
+    }
 
     // キャンバスをクリア（黒板の緑色で塗りつぶし）
     ctx.fillStyle = '#2d5016';
