@@ -43,7 +43,7 @@
 
 .canvas-container canvas {
   border-radius: 0;
-  touch-action: none; /* Canvas上でピンチズームを無効化 */
+  touch-action: pan-y pan-x pinch-zoom; /* スクロールとピンチズームは許可、1本指ドラッグで描画 */
   -webkit-user-select: none;
   user-select: none;
 }
@@ -56,7 +56,10 @@
   }
   
   .canvas-container canvas {
-    min-height: 100vh; /* 最低でもビューポート全体の高さ */
+    min-width: 100%; /* 横幅はコンテナに合わせる */
+    min-height: 800px; /* 最低800pxの高さを確保 */
+    width: 100%;
+    height: auto;
   }
 }
 
@@ -67,7 +70,7 @@
   }
   
   .canvas-container canvas {
-    min-height: 150vh; /* 縦画面では高さを1.5倍に */
+    min-height: 1000px; /* 縦画面ではさらに高く */
   }
 }
 
