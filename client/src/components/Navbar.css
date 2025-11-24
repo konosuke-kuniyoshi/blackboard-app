@@ -51,17 +51,9 @@
     width: 120px !important;
   }
   
-  /* 縦画面ではフッターとAdSense分のスペースを確保 */
+  /* 縦画面ではAdSense + フッター(固定)分のスペースを確保 */
   .navbar-room-list {
-    padding-bottom: 200px !important; /* フッター(90px) + AdSense(90px) + 余裕(20px) */
-  }
-  
-  /* フッターを確実に表示 */
-  .navbar-footer {
-    position: relative !important;
-    z-index: 10 !important;
-    display: block !important;
-    visibility: visible !important;
+    padding-bottom: 290px !important; /* AdSense(90px) + フッター固定(90px) + 余裕(110px) */
   }
 }
 
@@ -97,10 +89,18 @@
   z-index: 1;
 }
 
-/* スマホ縦画面ではAdSenseの位置をさらに上に */
+/* スマホ縦画面ではAdSenseの位置を固定フッターの上に */
 @media (max-width: 480px) and (orientation: portrait) {
   .navbar-ad-container {
-    bottom: 100px !important; /* フッターとの間隔を広げる */
+    position: fixed !important; /* 固定表示 */
+    bottom: 90px !important; /* フッターの高さ分上に配置 */
+    left: 0 !important;
+    width: 45px !important; /* ナビバーの幅に合わせる */
+    z-index: 500 !important; /* フッターより下、部屋リストより上 */
+  }
+  
+  .navbar.expanded .navbar-ad-container {
+    width: 120px !important; /* 展開時の幅 */
   }
 }
 
