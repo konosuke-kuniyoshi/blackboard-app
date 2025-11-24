@@ -16,9 +16,9 @@
 /* スマホ対応: 画面幅が768px以下の場合 */
 @media (max-width: 768px) {
   .toolbar {
-    min-height: 120px !important;
-    max-height: 180px !important; /* 最大高さを制限 */
-    overflow-y: scroll !important; /* 縦スクロールを常に有効 */
+    height: 140px !important; /* 固定高さ */
+    max-height: 140px !important; /* 最大高さを制限 */
+    overflow-y: auto !important; /* 縦スクロールを有効 */
     overflow-x: hidden; /* 横スクロールは無効 */
     padding: 15px 10px;
     gap: 10px;
@@ -44,9 +44,9 @@
 /* さらに小さい画面: 480px以下 */
 @media (max-width: 480px) {
   .toolbar {
-    min-height: 140px !important;
-    max-height: 200px !important;
-    overflow-y: scroll !important;
+    height: 160px !important; /* 固定高さ */
+    max-height: 160px !important;
+    overflow-y: auto !important;
     overflow-x: hidden;
     padding: 12px 8px;
     gap: 8px;
