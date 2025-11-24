@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Toolbar.css';
 
 interface ToolbarProps {
@@ -10,6 +10,10 @@ interface ToolbarProps {
   setTool: (tool: 'pen' | 'eraser') => void;
   onClear: () => void;
   isConnected: boolean;
+  customColors: string[];
+  onAddCustomColor: (color: string) => void;
+  onRemoveCustomColor: (color: string) => void;
+  onUpdateCustomColor: (oldColor: string, newColor: string) => void;
 }
 
 /**
@@ -127,17 +131,35 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   tool,
   setTool,
   onClear,
-  isConnected
+  isConnected,
+  customColors,
+  onAddCustomColor,
+  onRemoveCustomColor,
+  onUpdateCustomColor
 }) => {
-  // チョークの色の選択肢
-  const colors = [
-    '#ffffff', // 白
-    '#ffff00', // 黄色
-    '#ff6b6b', // 赤
-    '#4ecdc4', // シアン
-    '#45b7d1', // 青
-    '#ffa07a'  // オレンジ
-  ];
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [editingColor, setEditingColor] = useState<string | null>(null);
+  const [tempColor, setTempColor] = useState<string>('');
+
+  // 外側クリックでダイアログを閉じる
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      // カラーピッカーダイアログ内のクリックは無視
+      if (target.closest('.color-picker-dialog') || target.closest('.color-edit-dialog')) {
+        return;
+      }
+      setShowColorPicker(false);
+      setEditingColor(null);
+    };
+
+    if (showColorPicker || editingColor) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [showColorPicker, editingColor]);
 
   return (
     <div className="toolbar">
@@ -180,32 +202,311 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         </button>
       </div>
 
+      {/* 改行可能ポイント */}
+      <wbr />
+
       {/* 色選択（チョークの形） */}
       <div style={styles.section}>
         <span style={styles.label}>チョーク: </span>
         <div style={styles.chalkContainer}>
-          {colors.map((c) => (
+          {customColors.map((c) => (
+            <div key={c} style={{ position: 'relative', display: 'inline-block' }}>
+              <button
+                onClick={() => setColor(c)}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  // 白色は編集不可
+                  if (c === '#ffffff') return;
+                  setShowColorPicker(false); // 追加ダイアログを閉じる
+                  setEditingColor(c);
+                  setTempColor(c);
+                }}
+                style={{
+                  ...styles.chalkButton,
+                  border: 'none',
+                  background: 'transparent',
+                  padding: 0
+                }}
+                title={c === '#ffffff' ? `${c}` : `${c} (右クリックで編集)`}
+              >
+                <ChalkIcon color={c} isActive={color === c} />
+              </button>
+              {editingColor === c && c !== '#ffffff' && (
+                <div 
+                  className="color-edit-dialog"
+                  style={{
+                    position: 'absolute',
+                    bottom: '50px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 1000,
+                    background: '#fff',
+                    border: '2px solid #8B7355',
+                    borderRadius: '4px',
+                    padding: '10px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                    minWidth: '200px'
+                  }}
+                >
+                  <div style={{ marginBottom: '8px', fontSize: '12px', fontWeight: 'bold' }}>色を編集</div>
+                  <input
+                    type="color"
+                    value={tempColor}
+                    onChange={(e) => setTempColor(e.target.value)}
+                    style={{
+                      width: '100%',
+                      height: '40px',
+                      border: '1px solid #8B7355',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      marginBottom: '8px'
+                    }}
+                  />
+                  {/* カラーパレット */}
+                  <div style={{ marginBottom: '8px' }}>
+                    <div style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>よく使う色:</div>
+                    <div style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(6, 1fr)', 
+                      gap: '4px' 
+                    }}>
+                      {[
+                        '#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00',
+                        '#ff00ff', '#00ffff', '#ff8800', '#88ff00', '#0088ff', '#ff0088',
+                        '#ffc0cb', '#ffa500', '#ffffe0', '#90ee90', '#add8e6', '#dda0dd',
+                        '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9'
+                      ].map((paletteColor) => (
+                        <button
+                          key={paletteColor}
+                          onClick={() => setTempColor(paletteColor)}
+                          style={{
+                            width: '26px',
+                            height: '26px',
+                            border: tempColor === paletteColor ? '2px solid #333' : '1px solid #ccc',
+                            borderRadius: '4px',
+                            background: paletteColor,
+                            cursor: 'pointer',
+                            padding: 0,
+                            boxShadow: paletteColor === '#ffffff' ? 'inset 0 0 0 1px #e0e0e0' : 'none'
+                          }}
+                          title={paletteColor}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '5px', marginBottom: '5px' }}>
+                    <button
+                      onClick={() => {
+                        onUpdateCustomColor(c, tempColor);
+                        setColor(tempColor);
+                        setEditingColor(null);
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: '6px',
+                        background: '#4ecdc4',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      更新
+                    </button>
+                    <button
+                      onClick={() => {
+                        // 削除時に選択中の色だった場合は白色に変更
+                        if (color === c) {
+                          setColor('#ffffff');
+                        }
+                        onRemoveCustomColor(c);
+                        setEditingColor(null);
+                      }}
+                      style={{
+                        flex: 1,
+                        padding: '6px',
+                        background: '#ff6b6b',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      削除
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => setEditingColor(null)}
+                    style={{
+                      width: '100%',
+                      padding: '4px',
+                      background: '#8B7355',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '12px'
+                    }}
+                  >
+                    閉じる
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+          {/* カスタムカラー追加ボタン */}
+          <div style={{ position: 'relative' }}>
             <button
-              key={c}
-              onClick={() => setColor(c)}
+              onClick={() => {
+                setEditingColor(null); // 編集ダイアログを閉じる
+                setShowColorPicker(!showColorPicker);
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#f0f0f0';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#ffffff';
+              }}
               style={{
                 ...styles.chalkButton,
-                border: 'none',
-                background: 'transparent',
-                padding: 0
+                width: '23px',
+                height: '23px',
+                border: '2px solid #8B7355',
+                borderRadius: '50%',
+                background: '#ffffff',
+                cursor: 'pointer',
+                fontSize: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                color: '#000000',
+                transition: 'background 0.2s ease',
+                padding: 0,
+                lineHeight: '1'
               }}
-              title={c}
+              title="カスタムカラーを追加"
             >
-              <ChalkIcon color={c} isActive={color === c} />
+              +
             </button>
-          ))}
+            {showColorPicker && (
+              <div 
+                className="color-picker-dialog"
+                style={{
+                  position: 'absolute',
+                  bottom: '50px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  zIndex: 1000,
+                  background: '#fff',
+                  border: '2px solid #8B7355',
+                  borderRadius: '4px',
+                  padding: '10px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                  minWidth: '200px'
+                }}
+              >
+                <div style={{ marginBottom: '8px', fontSize: '12px', fontWeight: 'bold' }}>色を追加</div>
+                <input
+                  type="color"
+                  value={tempColor || color}
+                  onChange={(e) => setTempColor(e.target.value)}
+                  style={{
+                    width: '100%',
+                    height: '40px',
+                    border: '1px solid #8B7355',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    marginBottom: '8px'
+                  }}
+                />
+                {/* カラーパレット */}
+                <div style={{ marginBottom: '8px' }}>
+                  <div style={{ fontSize: '11px', color: '#666', marginBottom: '4px' }}>よく使う色:</div>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(6, 1fr)', 
+                    gap: '4px' 
+                  }}>
+                    {[
+                      '#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00',
+                      '#ff00ff', '#00ffff', '#ff8800', '#88ff00', '#0088ff', '#ff0088',
+                      '#ffc0cb', '#ffa500', '#ffffe0', '#90ee90', '#add8e6', '#dda0dd',
+                      '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9'
+                    ].map((paletteColor) => (
+                      <button
+                        key={paletteColor}
+                        onClick={() => setTempColor(paletteColor)}
+                        style={{
+                          width: '26px',
+                          height: '26px',
+                          border: tempColor === paletteColor ? '2px solid #333' : '1px solid #ccc',
+                          borderRadius: '4px',
+                          background: paletteColor,
+                          cursor: 'pointer',
+                          padding: 0,
+                          boxShadow: paletteColor === '#ffffff' ? 'inset 0 0 0 1px #e0e0e0' : 'none'
+                        }}
+                        title={paletteColor}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    const newColor = tempColor || color;
+                    onAddCustomColor(newColor);
+                    setColor(newColor);
+                    setShowColorPicker(false);
+                    setTempColor('');
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '6px',
+                    background: '#4ecdc4',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    marginBottom: '5px'
+                  }}
+                >
+                  追加
+                </button>
+                <button
+                  onClick={() => {
+                    setShowColorPicker(false);
+                    setTempColor('');
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '4px',
+                    background: '#8B7355',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px'
+                  }}
+                >
+                  閉じる
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* 太さ調整（ツールに応じて表示を変更） */}
       <div style={styles.section}>
         <span style={styles.label}>
-          {tool === 'pen' ? 'チョークの太さ:' : '消しゴムの太さ:'}
+          {tool === 'pen' ? 'チョークの太さ:' : '黒板消しの太さ:'}
         </span>
         <input
           type="range"

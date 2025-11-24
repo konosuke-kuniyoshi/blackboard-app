@@ -21,10 +21,19 @@ export const AdSense: React.FC<{
   }, []);
 
   return (
-    <div style={style}>
+    <div style={{
+      ...style,
+      overflow: 'hidden',
+      flexShrink: 0, // サイズ固定
+      position: 'relative'
+    }}>
       <ins
         className="adsbygoogle"
-        style={{ display: 'block' }}
+        style={{ 
+          display: 'block',
+          minHeight: '50px', // 最小高さを確保
+          maxHeight: '100px' // 最大高さを制限
+        }}
         data-ad-client="ca-pub-6900334221369927"
         data-ad-slot={adSlot}
         data-ad-format={adFormat}

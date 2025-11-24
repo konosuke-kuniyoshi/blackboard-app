@@ -22,6 +22,7 @@
   overflow: hidden;
   min-width: 0; /* フレックスアイテムのオーバーフローを防ぐ */
   position: relative; /* 位置の基準点を設定 */
+  height: 100vh; /* ビューポート全体の高さを確保 */
 }
 
 .canvas-container {

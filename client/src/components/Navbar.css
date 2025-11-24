@@ -10,6 +10,7 @@
   transition: width 0.3s ease;
   overflow: hidden;
   flex-shrink: 0;
+  position: relative; /* AdSenseの位置基準 */
 }
 
 /* タブレット対応: 画面幅が768px以下 */
@@ -38,4 +39,79 @@
   .navbar.expanded {
     width: 120px !important;
   }
+}
+
+/* AdSenseコンテナのスタイル */
+.navbar-ad-container {
+  position: absolute;
+  bottom: 95px; /* フッターの高さ(90px) + マージン(5px) */
+  left: 0;
+  right: 0;
+  overflow: hidden !important;
+  height: 90px !important; /* 高さを強制的に制限 */
+  max-height: 90px !important;
+  padding: 5px;
+  background-color: #0a0a0a;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+  z-index: 1;
+}
+
+/* AdSense内部の要素も高さ制限 */
+.navbar-ad-container * {
+  max-height: 80px !important;
+}
+
+/* 部屋リストのスクロール */
+.navbar-room-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 15px 10px;
+  padding-bottom: 200px !important; /* AdSense + フッター分の余白を確保 */
+  min-height: 0;
+  overflow-y: auto !important; /* コンテンツが溢れた時のみスクロールバーを表示 */
+}
+
+/* スクロールバーのカスタムスタイル */
+.navbar-room-list::-webkit-scrollbar {
+  width: 8px; /* スクロールバーの幅 */
+}
+
+.navbar-room-list::-webkit-scrollbar-track {
+  background: #1a1a1a; /* トラックの背景色 */
+  border-radius: 4px;
+}
+
+.navbar-room-list::-webkit-scrollbar-thumb {
+  background: #444; /* スクロールバーの色 */
+  border-radius: 4px;
+}
+
+.navbar-room-list::-webkit-scrollbar-thumb:hover {
+  background: #666; /* ホバー時の色 */
+}
+
+/* 現在の部屋情報のフッター */
+.navbar-footer {
+  flex-shrink: 0 !important; /* 絶対に縮小させない */
+  min-height: 90px; /* 注意書き分を増やす */
+  padding: 15px;
+  border-top: 2px solid #333;
+  font-size: 12px;
+  background-color: #0f0f0f;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.navbar-footer .current-room-label {
+  color: #999;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.navbar-footer .current-room {
+  color: #4ecdc4;
+  font-weight: bold;
+  font-size: 13px;
 }

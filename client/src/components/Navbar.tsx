@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import blackboardIcon from '../assets/blackboard.svg';
 import { AdSense } from './AdSense';
 import './Navbar.css';
@@ -6,20 +6,21 @@ import './Navbar.css';
 interface NavbarProps {
   currentRoom: string;
   onRoomChange: (roomId: string) => void;
+  isCollapsed: boolean;
+  onToggleCollapse: (isCollapsed: boolean) => void;
 }
 
 /**
  * サイドバー形式のナビゲーションバーコンポーネント
  */
-export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange, isCollapsed, onToggleCollapse }) => {
 
   // よく使う部屋のリスト
   const rooms = [
-    { id: 'room-1', name: '教室1', icon: '🏫' },
-    { id: 'room-2', name: '教室2', icon: '📚' },
-    { id: 'room-3', name: '教室3', icon: '✏️' },
-    { id: 'study', name: '自習室', icon: '📖' }
+    { id: 'room-1', name: '教室1', icon: '🏫', description: '共有黒板' },
+    { id: 'room-2', name: '教室2', icon: '📚', description: '共有黒板' },
+    { id: 'room-3', name: '教室3', icon: '✏️', description: '共有黒板' },
+    { id: 'study', name: '自習室', icon: '📖', description: '個人専用（ローカル保存）' }
   ];
 
   return (
@@ -36,7 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange }) => 
           </div>
         )}
         <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={() => onToggleCollapse(!isCollapsed)}
           style={styles.toggleButton}
           title={isCollapsed ? '展開する' : '折り畳む'}
         >
@@ -45,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange }) => 
       </div>
 
       {/* 部屋リスト */}
-      <div style={styles.roomList}>
+      <div className="navbar-room-list">
         <div style={styles.roomLabel}>
           {!isCollapsed && '部屋一覧'}
         </div>
@@ -58,7 +59,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange }) => 
               ...(currentRoom === room.id ? styles.activeRoomButton : {}),
               justifyContent: isCollapsed ? 'center' : 'flex-start'
             }}
-            title={room.name}
+            title={`${room.name} - ${room.description}`}
           >
             <span style={styles.roomIcon}>{room.icon}</span>
             {!isCollapsed && <span style={styles.roomName}>{room.name}</span>}
@@ -68,25 +69,35 @@ export const Navbar: React.FC<NavbarProps> = ({ currentRoom, onRoomChange }) => 
 
       {/* 広告エリア（展開時のみ表示） */}
       {!isCollapsed && (
-        <div style={styles.adContainer}>
+        <div className="navbar-ad-container">
           <AdSense 
-            adSlot="XXXXXXXXXX"
+            adSlot="ca-pub-6900334221369927"
             adFormat="auto"
-            style={{ minHeight: '60px', maxHeight: '100px' }}
           />
         </div>
       )}
 
       {/* 現在の部屋情報 */}
-      <div style={{
-        ...styles.footer,
-        opacity: isCollapsed ? 0 : 1,
-        visibility: isCollapsed ? 'hidden' : 'visible'
-      }}>
-        <div style={styles.currentRoomLabel}>現在の部屋:</div>
-        <div style={styles.currentRoom}>
+      <div 
+        className="navbar-footer"
+        style={{
+          opacity: isCollapsed ? 0 : 1,
+          visibility: isCollapsed ? 'hidden' : 'visible'
+        }}
+      >
+        <div className="current-room-label">現在の部屋:</div>
+        <div className="current-room">
           {rooms.find(r => r.id === currentRoom)?.icon} {rooms.find(r => r.id === currentRoom)?.name || currentRoom}
         </div>
+        {currentRoom === 'study' ? (
+          <div style={{ color: '#999', fontSize: '10px', marginTop: '5px' }}>
+            ※ 個人用（他の人と共有されません）
+          </div>
+        ) : (
+          <div style={{ color: '#999', fontSize: '10px', marginTop: '5px' }}>
+            ※ 共有黒板（他の人と共有されます）
+          </div>
+        )}
       </div>
     </nav>
   );
@@ -122,7 +133,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     flex: 1,
     display: 'flex',
     alignItems: 'center',
-    gap: '8px'
+    gap: '8px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    minWidth: 0 // フレックスアイテムの縮小を許可
   },
   logoIcon: {
     width: '24px',
@@ -145,13 +159,9 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: 'flex',
     flexDirection: 'column',
     gap: '8px',
-    padding: '15px 10px',
-    overflowY: 'auto',
-    scrollbarWidth: 'none', // Firefox用
-    msOverflowStyle: 'none' // IE/Edge用
-  } as React.CSSProperties & {
-    scrollbarWidth?: string;
-    msOverflowStyle?: string;
+    padding: '15px 10px 60px', // 上 左右 下（AdSenseエリア分の余白）
+    minHeight: 0 // フレックスアイテムのスクロールを有効にする
+    // overflow-yとpaddingBottomはCSSで管理
   },
   roomLabel: {
     fontSize: '12px',
@@ -191,6 +201,12 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   roomName: {
     flex: 1
+  },
+  roomDescription: {
+    fontSize: '10px',
+    color: '#999',
+    marginTop: '3px',
+    fontWeight: 'normal'
   },
   adContainer: {
     padding: '10px',
