@@ -296,7 +296,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   className="color-edit-dialog"
                   style={{
                     position: 'fixed',
-                    top: isPortrait ? '10vh' : '50%',
+                    top: isPortrait ? '5px' : '50%',
                     left: '50%',
                     transform: isPortrait ? 'translateX(-50%)' : 'translate(-50%, -50%)',
                     zIndex: 10000,
@@ -307,7 +307,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                     boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                     minWidth: '200px',
                     maxWidth: '90vw',
-                    maxHeight: isPortrait ? '70vh' : '80vh',
+                    maxHeight: isPortrait ? '50vh' : '80vh',
                     overflowY: 'auto',
                     WebkitUserSelect: 'none',
                     userSelect: 'none',
@@ -465,7 +465,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                 className="color-picker-dialog"
                 style={{
                   position: 'fixed',
-                  top: isPortrait ? '10vh' : '50%',
+                  top: isPortrait ? '5px' : '50%',
                   left: '50%',
                   transform: isPortrait ? 'translateX(-50%)' : 'translate(-50%, -50%)',
                   zIndex: 10000,
@@ -476,7 +476,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                   minWidth: '200px',
                   maxWidth: '90vw',
-                  maxHeight: isPortrait ? '70vh' : '80vh',
+                  maxHeight: isPortrait ? '50vh' : '80vh',
                   overflowY: 'auto',
                   WebkitUserSelect: 'none',
                   userSelect: 'none',
