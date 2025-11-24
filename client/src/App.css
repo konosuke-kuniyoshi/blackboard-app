@@ -71,7 +71,7 @@ html, body {
     min-height: 800px; /* デスクトップと同程度の高さ */
     width: 1200px;
     height: 800px;
-    touch-action: none; /* タッチ操作をJavaScriptで完全制御 */
+    touch-action: pan-x pan-y; /* スクロールは許可、1本指描画時はJSで制御 */
   }
 }
 
@@ -87,7 +87,7 @@ html, body {
     min-height: 800px;
     width: 1200px;
     height: 800px;
-    touch-action: none; /* タッチ操作をJavaScriptで完全制御 */
+    touch-action: pan-x pan-y; /* スクロールは許可、1本指描画時はJSで制御 */
   }
 }
 

@@ -173,85 +173,84 @@ export const Canvas: React.FC<CanvasProps> = ({
     setCurrentPoints([]);
   };
 
-  /**
-   * タッチ座標を取得
-   */
-  const getTouchPos = (e: React.TouchEvent<HTMLCanvasElement>): Point => {
+  // ネイティブタッチイベントリスナーを登録（passive: false で preventDefault を有効化）
+  useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return { x: 0, y: 0 };
+    if (!canvas) return;
 
-    const rect = canvas.getBoundingClientRect();
-    const touch = e.touches[0] || e.changedTouches[0];
-    return {
-      x: touch.clientX - rect.left,
-      y: touch.clientY - rect.top
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        e.preventDefault(); // 1本指の時のみスクロールを防止
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const point = {
+          x: touch.clientX - rect.left,
+          y: touch.clientY - rect.top
+        };
+        setIsDrawing(true);
+        setCurrentPoints([point]);
+      }
     };
-  };
 
-  /**
-   * タッチ開始
-   */
-  const startTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    // 1本指のみ描画を開始
-    if (e.touches.length === 1) {
-      // ブラウザのスクロールを確実に防止
-      e.preventDefault();
-      e.stopPropagation(); // イベントの伝播を停止
-      setIsDrawing(true);
-      const point = getTouchPos(e);
-      setCurrentPoints([point]);
-    }
-    // 2本指以降はスクロール用なので何もしない
-  };
-
-  /**
-   * タッチ移動
-   */
-  const touchDraw = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
-    
-    // 1本指での描画継続
-    if (e.touches.length === 1) {
-      // ブラウザのスクロールを確実に防止
-      e.preventDefault();
-      e.stopPropagation(); // イベントの伝播を停止
-    
-      const point = getTouchPos(e);
-      const newPoints = [...currentPoints, point];
-      setCurrentPoints(newPoints);
-
-      // リアルタイムプレビュー
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      drawStroke(ctx, {
-        id: '',
-        roomId,
-        points: newPoints,
-        color,
-        lineWidth,
-        tool,
-        timestamp: Date.now()
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDrawing || e.touches.length !== 1) {
+        if (e.touches.length > 1) {
+          // 2本指以降は描画を中断
+          setIsDrawing(false);
+          setCurrentPoints([]);
+        }
+        return;
+      }
+      
+      e.preventDefault(); // 描画中はスクロールを防止
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      const point = {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top
+      };
+      
+      setCurrentPoints(prev => {
+        const newPoints = [...prev, point];
+        
+        // リアルタイムプレビュー
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          drawStroke(ctx, {
+            id: '',
+            roomId,
+            points: newPoints,
+            color,
+            lineWidth,
+            tool,
+            timestamp: Date.now()
+          });
+        }
+        
+        return newPoints;
       });
-    } else {
-      // 2本指以降が触れたら描画を中断（スクロール許可）
-      setIsDrawing(false);
-      setCurrentPoints([]);
-    }
-  };
+    };
 
-  /**
-   * タッチ終了
-   */
-  const stopTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    if (isDrawing) {
-      e.preventDefault();
-      e.stopPropagation(); // イベントの伝播を停止
-      stopDrawing();
-    }
-  };
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (isDrawing) {
+        e.preventDefault();
+        stopDrawing();
+      }
+    };
+
+    // passive: false オプションで登録
+    canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+    canvas.addEventListener('touchcancel', handleTouchEnd, { passive: false });
+
+    return () => {
+      canvas.removeEventListener('touchstart', handleTouchStart);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchend', handleTouchEnd);
+      canvas.removeEventListener('touchcancel', handleTouchEnd);
+    };
+  }, [isDrawing, roomId, color, lineWidth, tool, drawStroke, currentPoints]);
 
   // カーソルスタイルを取得
   const getCursorStyle = (): string => {
@@ -285,10 +284,6 @@ export const Canvas: React.FC<CanvasProps> = ({
       onMouseMove={draw}
       onMouseUp={stopDrawing}
       onMouseLeave={stopDrawing}
-      onTouchStart={startTouchDrawing}
-      onTouchMove={touchDraw}
-      onTouchEnd={stopTouchDrawing}
-      onTouchCancel={stopTouchDrawing}
       style={{
         cursor: getCursorStyle(),
         display: 'block',
