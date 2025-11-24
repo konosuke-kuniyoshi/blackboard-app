@@ -140,6 +140,16 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [editingColor, setEditingColor] = useState<string | null>(null);
   const [tempColor, setTempColor] = useState<string>('');
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  // 画面サイズの変化を監視
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // 外側クリックでダイアログを閉じる
   React.useEffect(() => {
@@ -161,10 +171,19 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     }
   }, [showColorPicker, editingColor]);
 
+  // レスポンシブなスタイル
+  const responsiveStyles = {
+    section: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: isMobile ? '5px' : '10px' // モバイルでは狭く
+    }
+  };
+
   return (
     <div className="toolbar">
       {/* 接続状態 */}
-      <div style={styles.section}>
+      <div style={responsiveStyles.section}>
         <span style={styles.label}>接続: </span>
         <span style={{ 
           ...styles.status, 
@@ -175,7 +194,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       </div>
 
       {/* ツール選択 */}
-      <div style={styles.section}>
+      <div style={responsiveStyles.section}>
         <button
           onClick={() => setTool('pen')}
           style={{
@@ -206,7 +225,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       <wbr />
 
       {/* 色選択（チョークの形） */}
-      <div style={styles.section}>
+      <div style={responsiveStyles.section}>
         <span style={styles.label}>チョーク: </span>
         <div style={styles.chalkContainer}>
           {customColors.map((c) => (
@@ -504,7 +523,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       </div>
 
       {/* 太さ調整（ツールに応じて表示を変更） */}
-      <div style={styles.section}>
+      <div style={responsiveStyles.section}>
         <span style={styles.label}>
           {tool === 'pen' ? 'チョークの太さ:' : '黒板消しの太さ:'}
         </span>
