@@ -1,0 +1,15 @@
+# robots.txt for blackboard-app
+
+User-agent: *
+Allow: /
+
+# Googlebot specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Sitemap location
+Sitemap: https://blackboard-app.vercel.app/sitemap.xml
+
+# Disallow unnecessary paths (if any)
+# Disallow: /api/
