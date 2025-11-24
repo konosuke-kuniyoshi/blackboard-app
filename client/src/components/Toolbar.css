@@ -18,8 +18,8 @@
   .toolbar {
     overflow-y: auto !important; /* 縦スクロールを有効 */
     overflow-x: auto !important; /* 横スクロールを有効 */
-    padding: 10px 10px;
-    gap: 5px; /* 行間を狭く */
+    padding: 10px 10px !important;
+    gap: 5px !important; /* 行間を狭く */
     flex-shrink: 0 !important;
     -webkit-overflow-scrolling: touch; /* iOSのスムーズスクロール */
   }
@@ -61,8 +61,8 @@
   .toolbar {
     height: 350px !important; /* 縦画面では高めに */
     max-height: 350px !important;
-    padding: 8px 6px;
-    gap: 4px; /* 行間をさらに狭く */
+    padding: 8px 6px !important;
+    gap: 4px !important; /* 行間をさらに狭く */
   }
 }
 
@@ -70,7 +70,7 @@
   .toolbar {
     height: 160px !important; /* 横画面では低めに */
     max-height: 160px !important;
-    padding: 8px 6px;
-    gap: 4px; /* 行間をさらに狭く */
+    padding: 8px 6px !important;
+    gap: 4px !important; /* 行間をさらに狭く */
   }
 }

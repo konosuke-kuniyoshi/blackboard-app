@@ -51,10 +51,7 @@ export const Canvas: React.FC<CanvasProps> = ({
 
     const resizeCanvas = () => {
       const parent = canvas.parentElement;
-      if (parent) {
-        const oldWidth = canvas.width;
-        const oldHeight = canvas.height;
-        
+      if (parent) {        
         // CSSで設定されたサイズを取得
         const rect = canvas.getBoundingClientRect();
         
@@ -70,26 +67,28 @@ export const Canvas: React.FC<CanvasProps> = ({
           canvas.height = rect.height;
         }
         
-        // サイズが変更された場合は再描画をトリガー
-        if (oldWidth !== canvas.width || oldHeight !== canvas.height) {
-          // 背景色を塗りつぶし
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.fillStyle = '#2d5016';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // 全ストロークを再描画
-            strokes.forEach((stroke) => {
-              drawStroke(ctx, stroke);
-            });
-          }
+        // 背景色を塗りつぶし（画面回転時も必ず再描画）
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.fillStyle = '#2d5016';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          
+          // 全ストロークを再描画
+          strokes.forEach((stroke) => {
+            drawStroke(ctx, stroke);
+          });
         }
       }
     };
 
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-    return () => window.removeEventListener('resize', resizeCanvas);
+    // orientationchangeイベントも監視（画面回転対応）
+    window.addEventListener('orientationchange', resizeCanvas);
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('orientationchange', resizeCanvas);
+    };
   }, [strokes, drawStroke]);
 
   // ストロークが更新されたら再描画
