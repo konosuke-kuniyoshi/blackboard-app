@@ -192,54 +192,51 @@ export const Canvas: React.FC<CanvasProps> = ({
    * タッチ開始
    */
   const startTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    // 1本指のみ描画を許可、2本指以降はスクロール用
-    if (e.touches.length === 1) {
-      // ブラウザのデフォルト動作を完全に防止
-      e.preventDefault();
-      e.stopPropagation();
-      
-      setIsDrawing(true);
-      const point = getTouchPos(e);
-      setCurrentPoints([point]);
-    }
+    // 2本指以降はスクロール用なので無視
+    if (e.touches.length !== 1) return;
+    
+    // 1本指のみ描画を開始
+    e.preventDefault();
+    setIsDrawing(true);
+    const point = getTouchPos(e);
+    setCurrentPoints([point]);
   };
 
   /**
    * タッチ移動
    */
   const touchDraw = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    // 描画中は1本指のみ
-    if (isDrawing && e.touches.length === 1) {
-      // ブラウザのスクロールを完全に防止
-      e.preventDefault();
-      e.stopPropagation();
-      
-      const point = getTouchPos(e);
-      const newPoints = [...currentPoints, point];
-      setCurrentPoints(newPoints);
-
-      // リアルタイムプレビュー
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      drawStroke(ctx, {
-        id: '',
-        roomId,
-        points: newPoints,
-        color,
-        lineWidth,
-        tool,
-        timestamp: Date.now()
-      });
-    } else if (e.touches.length >= 2) {
-      // 2本指以降が触れたら描画を中断（スクロール許可）
-      if (isDrawing) {
-        setIsDrawing(false);
-        setCurrentPoints([]);
-      }
+    if (!isDrawing) return;
+    
+    // 2本指以降が触れたら描画を中断（スクロール許可）
+    if (e.touches.length !== 1) {
+      setIsDrawing(false);
+      setCurrentPoints([]);
+      return;
     }
+    
+    // 1本指での描画継続
+    e.preventDefault();
+    
+    const point = getTouchPos(e);
+    const newPoints = [...currentPoints, point];
+    setCurrentPoints(newPoints);
+
+    // リアルタイムプレビュー
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    drawStroke(ctx, {
+      id: '',
+      roomId,
+      points: newPoints,
+      color,
+      lineWidth,
+      tool,
+      timestamp: Date.now()
+    });
   };
 
   /**
@@ -248,7 +245,6 @@ export const Canvas: React.FC<CanvasProps> = ({
   const stopTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
     if (isDrawing) {
       e.preventDefault();
-      e.stopPropagation();
       stopDrawing();
     }
   };

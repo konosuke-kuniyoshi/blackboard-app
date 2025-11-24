@@ -43,7 +43,7 @@
 
 .canvas-container canvas {
   border-radius: 0;
-  touch-action: none; /* タッチ操作は完全にJavaScriptで制御 */
+  touch-action: manipulation; /* タッチ操作を許可、ダブルタップズームは無効 */
   -webkit-user-select: none;
   user-select: none;
 }
@@ -53,6 +53,7 @@
   .canvas-container {
     overflow: scroll !important; /* 縦横スクロール許可 */
     -webkit-overflow-scrolling: touch; /* iOSのスムーズスクロール */
+    touch-action: pan-x pan-y; /* コンテナレベルでスクロールを許可 */
   }
   
   .canvas-container canvas {
@@ -61,6 +62,7 @@
     min-height: 800px; /* デスクトップと同程度の高さ */
     width: 1200px;
     height: 800px;
+    touch-action: none; /* キャンバス上では描画を優先 */
   }
 }
 
@@ -68,6 +70,7 @@
 @media (max-width: 480px) and (orientation: portrait) {
   .canvas-container {
     overflow: scroll !important;
+    touch-action: pan-x pan-y;
   }
   
   .canvas-container canvas {
@@ -75,6 +78,7 @@
     min-height: 800px;
     width: 1200px;
     height: 800px;
+    touch-action: none;
   }
 }
 
