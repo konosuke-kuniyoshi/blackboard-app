@@ -192,14 +192,15 @@ export const Canvas: React.FC<CanvasProps> = ({
    * タッチ開始
    */
   const startTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    // 2本指以降はスクロール用なので無視
-    if (e.touches.length !== 1) return;
-    
     // 1本指のみ描画を開始
-    e.preventDefault();
-    setIsDrawing(true);
-    const point = getTouchPos(e);
-    setCurrentPoints([point]);
+    if (e.touches.length === 1) {
+      // ブラウザのスクロールを確実に防止
+      e.preventDefault();
+      setIsDrawing(true);
+      const point = getTouchPos(e);
+      setCurrentPoints([point]);
+    }
+    // 2本指以降はスクロール用なので何もしない
   };
 
   /**
@@ -208,35 +209,35 @@ export const Canvas: React.FC<CanvasProps> = ({
   const touchDraw = (e: React.TouchEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return;
     
-    // 2本指以降が触れたら描画を中断（スクロール許可）
-    if (e.touches.length !== 1) {
+    // 1本指での描画継続
+    if (e.touches.length === 1) {
+      // ブラウザのスクロールを確実に防止
+      e.preventDefault();
+    
+      const point = getTouchPos(e);
+      const newPoints = [...currentPoints, point];
+      setCurrentPoints(newPoints);
+
+      // リアルタイムプレビュー
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      drawStroke(ctx, {
+        id: '',
+        roomId,
+        points: newPoints,
+        color,
+        lineWidth,
+        tool,
+        timestamp: Date.now()
+      });
+    } else {
+      // 2本指以降が触れたら描画を中断（スクロール許可）
       setIsDrawing(false);
       setCurrentPoints([]);
-      return;
     }
-    
-    // 1本指での描画継続
-    e.preventDefault();
-    
-    const point = getTouchPos(e);
-    const newPoints = [...currentPoints, point];
-    setCurrentPoints(newPoints);
-
-    // リアルタイムプレビュー
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    drawStroke(ctx, {
-      id: '',
-      roomId,
-      points: newPoints,
-      color,
-      lineWidth,
-      tool,
-      timestamp: Date.now()
-    });
   };
 
   /**
