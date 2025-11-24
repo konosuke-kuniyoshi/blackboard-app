@@ -143,16 +143,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const [tempColor, setTempColor] = useState<string>('');
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [longPressTimer, setLongPressTimer] = useState<number | null>(null);
-  const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
 
-  // 画面サイズと向きの変化を監視
+  // 画面サイズの変化を監視
   React.useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
-      const portrait = window.innerHeight > window.innerWidth;
-      console.log('Toolbar resize:', { width: window.innerWidth, isMobile: mobile, isPortrait: portrait });
       setIsMobile(mobile);
-      setIsPortrait(portrait);
     };
     // 初回実行
     handleResize();
@@ -297,9 +293,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   className="color-edit-dialog"
                   style={{
                     position: 'fixed',
-                    top: isPortrait ? '5px' : '50%',
+                    top: '50%',
                     left: '50%',
-                    transform: isPortrait ? 'translateX(-50%)' : 'translate(-50%, -50%)',
+                    transform: 'translate(-50%, -50%)',
                     zIndex: 10000,
                     background: '#fff',
                     border: '2px solid #8B7355',
@@ -308,7 +304,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                     boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                     minWidth: '200px',
                     maxWidth: '90vw',
-                    maxHeight: isPortrait ? '50vh' : '80vh',
+                    maxHeight: '80vh',
                     overflowY: 'auto',
                     WebkitUserSelect: 'none',
                     userSelect: 'none',
@@ -467,9 +463,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                 className="color-picker-dialog"
                 style={{
                   position: 'fixed',
-                  top: isPortrait ? '5px' : '50%',
+                  top: '50%',
                   left: '50%',
-                  transform: isPortrait ? 'translateX(-50%)' : 'translate(-50%, -50%)',
+                  transform: 'translate(-50%, -50%)',
                   zIndex: 10000,
                   background: '#fff',
                   border: '2px solid #8B7355',
@@ -478,7 +474,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                   minWidth: '200px',
                   maxWidth: '90vw',
-                  maxHeight: isPortrait ? '50vh' : '80vh',
+                  maxHeight: '80vh',
                   overflowY: 'auto',
                   WebkitUserSelect: 'none',
                   userSelect: 'none',
