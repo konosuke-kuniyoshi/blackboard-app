@@ -263,17 +263,19 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                 <div 
                   className="color-edit-dialog"
                   style={{
-                    position: 'absolute',
-                    bottom: '50px',
+                    position: 'fixed',
+                    top: '50%',
                     left: '50%',
-                    transform: 'translateX(-50%)',
-                    zIndex: 1000,
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 10000,
                     background: '#fff',
                     border: '2px solid #8B7355',
                     borderRadius: '4px',
                     padding: '10px',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                    minWidth: '200px'
+                    minWidth: '200px',
+                    maxHeight: '80vh',
+                    overflowY: 'auto'
                   }}
                 >
                   <div style={{ marginBottom: '8px', fontSize: '12px', fontWeight: 'bold' }}>色を編集</div>
@@ -425,17 +427,19 @@ export const Toolbar: React.FC<ToolbarProps> = ({
               <div 
                 className="color-picker-dialog"
                 style={{
-                  position: 'absolute',
-                  bottom: '50px',
+                  position: 'fixed',
+                  top: '50%',
                   left: '50%',
-                  transform: 'translateX(-50%)',
-                  zIndex: 1000,
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: 10000,
                   background: '#fff',
                   border: '2px solid #8B7355',
                   borderRadius: '4px',
                   padding: '10px',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-                  minWidth: '200px'
+                  minWidth: '200px',
+                  maxHeight: '80vh',
+                  overflowY: 'auto'
                 }}
               >
                 <div style={{ marginBottom: '8px', fontSize: '12px', fontWeight: 'bold' }}>色を追加</div>
