@@ -192,9 +192,12 @@ export const Canvas: React.FC<CanvasProps> = ({
    * タッチ開始
    */
   const startTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    // 1本指のみ描画を許可、2本指以降はスクロール/ピンチズーム用
+    // 1本指のみ描画を許可、2本指以降はスクロール用
     if (e.touches.length === 1) {
-      e.preventDefault(); // 1本指の時のみスクロールを防ぐ
+      // ブラウザのデフォルト動作を完全に防止
+      e.preventDefault();
+      e.stopPropagation();
+      
       setIsDrawing(true);
       const point = getTouchPos(e);
       setCurrentPoints([point]);
@@ -205,11 +208,11 @@ export const Canvas: React.FC<CanvasProps> = ({
    * タッチ移動
    */
   const touchDraw = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
-    
     // 描画中は1本指のみ
-    if (e.touches.length === 1) {
-      e.preventDefault(); // 描画中のスクロールを防ぐ
+    if (isDrawing && e.touches.length === 1) {
+      // ブラウザのスクロールを完全に防止
+      e.preventDefault();
+      e.stopPropagation();
       
       const point = getTouchPos(e);
       const newPoints = [...currentPoints, point];
@@ -230,10 +233,12 @@ export const Canvas: React.FC<CanvasProps> = ({
         tool,
         timestamp: Date.now()
       });
-    } else {
-      // 2本指以降が触れたら描画を中断
-      setIsDrawing(false);
-      setCurrentPoints([]);
+    } else if (e.touches.length >= 2) {
+      // 2本指以降が触れたら描画を中断（スクロール許可）
+      if (isDrawing) {
+        setIsDrawing(false);
+        setCurrentPoints([]);
+      }
     }
   };
 
@@ -243,6 +248,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   const stopTouchDrawing = (e: React.TouchEvent<HTMLCanvasElement>) => {
     if (isDrawing) {
       e.preventDefault();
+      e.stopPropagation();
       stopDrawing();
     }
   };
