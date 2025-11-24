@@ -18,7 +18,7 @@ function App() {
   const isStudyRoom = roomId === 'study';
   
   // WebSocket接続とストローク管理（共有部屋用）
-  const webSocketData = useWebSocket(roomId);
+  const webSocketData = useWebSocket(isStudyRoom ? '' : roomId); // 自習室の場合は空文字列
   
   // ローカルストレージ管理（自習室用）
   const localStorageData = useLocalStorage(roomId);
@@ -27,6 +27,15 @@ function App() {
   const { strokes, isConnected, sendStroke, clearBoard } = isStudyRoom 
     ? localStorageData 
     : webSocketData;
+
+  // デバッグログ
+  console.log('🔍 App state:', {
+    roomId,
+    isStudyRoom,
+    dataSource: isStudyRoom ? 'localStorage' : 'WebSocket',
+    strokeCount: strokes.length,
+    isConnected
+  });
 
   // 現在のツールに応じた太さを取得
   const currentLineWidth = uiState.selectedTool === 'pen' ? uiState.penWidth : uiState.eraserWidth;

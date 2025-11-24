@@ -12,6 +12,14 @@ export const useWebSocket = (roomId: string) => {
   const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+    // roomIdが空の場合は接続しない（自習室用）
+    if (!roomId) {
+      console.log('⏸️ Skipping WebSocket connection (empty roomId)');
+      setIsConnected(false);
+      setStrokes([]);
+      return;
+    }
+
     // WebSocket接続を確立
     const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3001';
     console.log('Connecting to WebSocket server:', wsUrl);
