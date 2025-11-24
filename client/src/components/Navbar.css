@@ -11,6 +11,7 @@
   overflow: hidden;
   flex-shrink: 0;
   position: relative; /* AdSenseの位置基準 */
+  z-index: 10; /* ダイアログより下に配置 */
 }
 
 /* タブレット対応: 画面幅が768px以下 */
@@ -161,7 +162,7 @@
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
-    z-index: 1000 !important; /* 最前面 */
+    z-index: 50 !important; /* ダイアログより下に配置 */
     background-color: #0f0f0f !important;
   }
   

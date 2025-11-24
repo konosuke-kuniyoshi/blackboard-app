@@ -141,6 +141,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const [editingColor, setEditingColor] = useState<string | null>(null);
   const [tempColor, setTempColor] = useState<string>('');
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [longPressTimer, setLongPressTimer] = useState<number | null>(null);
 
   // 画面サイズの変化を監視
   React.useEffect(() => {
@@ -249,13 +250,38 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   setEditingColor(c);
                   setTempColor(c);
                 }}
+                onTouchStart={() => {
+                  // 白色は編集不可
+                  if (c === '#ffffff') return;
+                  // 長押し開始
+                  const timer = setTimeout(() => {
+                    setShowColorPicker(false); // 追加ダイアログを閉じる
+                    setEditingColor(c);
+                    setTempColor(c);
+                  }, 500); // 500ms長押しで編集モード
+                  setLongPressTimer(timer);
+                }}
+                onTouchEnd={() => {
+                  // 長押しタイマーをクリア
+                  if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    setLongPressTimer(null);
+                  }
+                }}
+                onTouchMove={() => {
+                  // 指が動いたらタイマーをクリア
+                  if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    setLongPressTimer(null);
+                  }
+                }}
                 style={{
                   ...styles.chalkButton,
                   border: 'none',
                   background: 'transparent',
                   padding: 0
                 }}
-                title={c === '#ffffff' ? `${c}` : `${c} (右クリックで編集)`}
+                title={c === '#ffffff' ? `${c}` : `${c} (長押しまたは右クリックで編集)`}
               >
                 <ChalkIcon color={c} isActive={color === c} />
               </button>
