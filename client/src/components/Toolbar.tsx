@@ -142,13 +142,16 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const [tempColor, setTempColor] = useState<string>('');
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [longPressTimer, setLongPressTimer] = useState<number | null>(null);
+  const [isPortrait, setIsPortrait] = useState(window.innerHeight > window.innerWidth);
 
-  // 画面サイズの変化を監視
+  // 画面サイズと向きの変化を監視
   React.useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
-      console.log('Toolbar resize:', { width: window.innerWidth, isMobile: mobile });
+      const portrait = window.innerHeight > window.innerWidth;
+      console.log('Toolbar resize:', { width: window.innerWidth, isMobile: mobile, isPortrait: portrait });
       setIsMobile(mobile);
+      setIsPortrait(portrait);
     };
     // 初回実行
     handleResize();
@@ -279,7 +282,10 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   ...styles.chalkButton,
                   border: 'none',
                   background: 'transparent',
-                  padding: 0
+                  padding: 0,
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                  WebkitTouchCallout: 'none'
                 }}
                 title={c === '#ffffff' ? `${c}` : `${c} (長押しまたは右クリックで編集)`}
               >
@@ -290,9 +296,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   className="color-edit-dialog"
                   style={{
                     position: 'fixed',
-                    top: '50%',
+                    top: isPortrait ? '10vh' : '50%',
                     left: '50%',
-                    transform: 'translate(-50%, -50%)',
+                    transform: isPortrait ? 'translateX(-50%)' : 'translate(-50%, -50%)',
                     zIndex: 10000,
                     background: '#fff',
                     border: '2px solid #8B7355',
@@ -300,8 +306,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                     padding: '10px',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                     minWidth: '200px',
-                    maxHeight: '80vh',
-                    overflowY: 'auto'
+                    maxWidth: '90vw',
+                    maxHeight: isPortrait ? '70vh' : '80vh',
+                    overflowY: 'auto',
+                    WebkitUserSelect: 'none',
+                    userSelect: 'none',
+                    WebkitTouchCallout: 'none'
                   }}
                 >
                   <div style={{ marginBottom: '8px', fontSize: '12px', fontWeight: 'bold' }}>色を編集</div>
@@ -455,9 +465,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                 className="color-picker-dialog"
                 style={{
                   position: 'fixed',
-                  top: '50%',
+                  top: isPortrait ? '10vh' : '50%',
                   left: '50%',
-                  transform: 'translate(-50%, -50%)',
+                  transform: isPortrait ? 'translateX(-50%)' : 'translate(-50%, -50%)',
                   zIndex: 10000,
                   background: '#fff',
                   border: '2px solid #8B7355',
@@ -465,8 +475,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                   padding: '10px',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                   minWidth: '200px',
-                  maxHeight: '80vh',
-                  overflowY: 'auto'
+                  maxWidth: '90vw',
+                  maxHeight: isPortrait ? '70vh' : '80vh',
+                  overflowY: 'auto',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                  WebkitTouchCallout: 'none'
                 }}
               >
                 <div style={{ marginBottom: '8px', fontSize: '12px', fontWeight: 'bold' }}>色を追加</div>
