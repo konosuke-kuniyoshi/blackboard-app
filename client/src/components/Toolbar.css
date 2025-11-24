@@ -43,24 +43,24 @@
 /* スマホ縦画面: 高めに設定 */
 @media (max-width: 768px) and (orientation: portrait) {
   .toolbar {
-    height: 350px !important; /* 縦画面では高めに */
-    max-height: 350px !important;
+    max-height: 350px !important; /* 縦画面では最大高さを制限 */
+    height: auto !important; /* コンテンツに応じた高さ */
   }
 }
 
 /* スマホ横画面: 低めに設定 */
 @media (max-width: 768px) and (orientation: landscape) {
   .toolbar {
-    height: 180px !important; /* 横画面では低めに */
-    max-height: 180px !important;
+    max-height: 180px !important; /* 横画面では最大高さを制限 */
+    height: auto !important; /* コンテンツに応じた高さ */
   }
 }
 
 /* さらに小さい画面: 480px以下 */
 @media (max-width: 480px) and (orientation: portrait) {
   .toolbar {
-    height: 350px !important; /* 縦画面では高めに */
-    max-height: 350px !important;
+    max-height: 350px !important; /* 縦画面では最大高さを制限 */
+    height: auto !important; /* コンテンツに応じた高さ */
     padding: 8px 6px !important;
     gap: 4px !important; /* 行間をさらに狭く */
   }
@@ -68,8 +68,8 @@
 
 @media (max-width: 480px) and (orientation: landscape) {
   .toolbar {
-    height: 160px !important; /* 横画面では低めに */
-    max-height: 160px !important;
+    max-height: 160px !important; /* 横画面では最大高さを制限 */
+    height: auto !important; /* コンテンツに応じた高さ */
     padding: 8px 6px !important;
     gap: 4px !important; /* 行間をさらに狭く */
   }
