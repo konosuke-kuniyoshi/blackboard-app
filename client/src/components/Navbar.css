@@ -41,8 +41,8 @@
   }
 }
 
-/* スマホ対応: 画面幅が480px以下 */
-@media (max-width: 480px) {
+/* スマホ縦画面: 画面幅が480px以下 かつ 縦向き */
+@media (max-width: 480px) and (orientation: portrait) {
   .navbar {
     width: 45px !important;
   }
@@ -51,9 +51,33 @@
     width: 120px !important;
   }
   
-  /* スマホではパディングを小さく */
+  /* 縦画面ではフッターとAdSense分のスペースを確保 */
   .navbar-room-list {
-    padding-bottom: 100px !important; /* スマホでは少なめに */
+    padding-bottom: 200px !important; /* フッター(90px) + AdSense(90px) + 余裕(20px) */
+  }
+  
+  /* フッターを確実に表示 */
+  .navbar-footer {
+    position: relative !important;
+    z-index: 10 !important;
+    display: block !important;
+    visibility: visible !important;
+  }
+}
+
+/* スマホ横画面: 画面幅が768px以下 かつ 横向き */
+@media (max-width: 768px) and (orientation: landscape) {
+  .navbar {
+    width: 45px !important;
+  }
+  
+  .navbar.expanded {
+    width: 120px !important;
+  }
+  
+  /* 横画面では少なめでOK */
+  .navbar-room-list {
+    padding-bottom: 100px !important;
   }
 }
 
