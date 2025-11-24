@@ -17,11 +17,27 @@
 @media (max-width: 768px) {
   .toolbar {
     min-height: 120px !important;
-    max-height: 180px;
-    overflow-y: auto;
+    max-height: 180px !important; /* 最大高さを制限 */
+    overflow-y: scroll !important; /* 縦スクロールを常に有効 */
+    overflow-x: hidden; /* 横スクロールは無効 */
     padding: 15px 10px;
     gap: 10px;
     flex-shrink: 0 !important;
+    -webkit-overflow-scrolling: touch; /* iOSのスムーズスクロール */
+  }
+  
+  /* ツールバーのスクロールバーのカスタムスタイル */
+  .toolbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .toolbar::-webkit-scrollbar-track {
+    background: #d4a574;
+  }
+  
+  .toolbar::-webkit-scrollbar-thumb {
+    background: #8B7355;
+    border-radius: 3px;
   }
 }
 
@@ -29,9 +45,12 @@
 @media (max-width: 480px) {
   .toolbar {
     min-height: 140px !important;
-    max-height: 200px;
+    max-height: 200px !important;
+    overflow-y: scroll !important;
+    overflow-x: hidden;
     padding: 12px 8px;
     gap: 8px;
     flex-shrink: 0 !important;
+    -webkit-overflow-scrolling: touch;
   }
 }
