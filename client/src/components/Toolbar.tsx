@@ -145,8 +145,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   // 画面サイズの変化を監視
   React.useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      const mobile = window.innerWidth <= 768;
+      console.log('Toolbar resize:', { width: window.innerWidth, isMobile: mobile });
+      setIsMobile(mobile);
     };
+    // 初回実行
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -176,7 +180,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     section: {
       display: 'flex',
       alignItems: 'center',
-      gap: isMobile ? '5px' : '10px' // モバイルでは狭く
+      gap: isMobile ? '3px' : '10px' // モバイルでは狭く
+    },
+    chalkContainer: {
+      display: 'flex',
+      gap: isMobile ? '3px' : '5px', // モバイルでは狭く
+      alignItems: 'center'
     }
   };
 
@@ -227,7 +236,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       {/* 色選択（チョークの形） */}
       <div style={responsiveStyles.section}>
         <span style={styles.label}>チョーク: </span>
-        <div style={styles.chalkContainer}>
+        <div style={responsiveStyles.chalkContainer}>
           {customColors.map((c) => (
             <div key={c} style={{ position: 'relative', display: 'inline-block' }}>
               <button
